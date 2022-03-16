@@ -54,7 +54,6 @@ class Lyrics(commands.Cog):
                 return
             if ctx.guild.voice_client.is_playing():
                 title = data[ctx.guild.id]['songs'][0]['title']
-                user_search_term = data[ctx.guild.id]['songs'][0]['user_search_term']
 
         if artist == "":
             song_display = title
@@ -63,10 +62,10 @@ class Lyrics(commands.Cog):
 
         await ctx.respond(f"Searching the lyrics of {song_display}")
         try:
-            song_data = self.get_song_lyrics(song_display if song_display.isascii() else user_search_term)
+            song_data = self.get_song_lyrics(song_display)
             print(song_data)
         except:
-            await ctx.interaction.edit_original_message(content="I apologize there has been error. Please try again later.")
+            await ctx.interaction.edit_original_message(content="I apologize I cannot find lyrics for that song.")
 
         embed_list = []
         if len(song_data['lyrics']) < 4000:
@@ -76,7 +75,7 @@ class Lyrics(commands.Cog):
             lyrics_splitted = self.lyrics_splitter(song_data)
             embed_list = self.song_lyrics_embed_list_maker(song_data, lyrics_splitted)
 
-        print("proof that this module was reloaded!!!!!")
+        print("proof that this module was reloaded!!!/p")
         await ctx.interaction.edit_original_message(content=None,embeds=embed_list)
 
 

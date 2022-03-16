@@ -42,13 +42,10 @@ async def on_ready():
 async def reload(ctx, extension: Option(str, "The name of the cog module you want to load")):
     try:
         bot.reload_extension(f"cogs.{extension}")
+        await bot.sync_commands(guild_ids=TESTING_SERVERS)
         await ctx.respond(f"`{extension}` cog was successfully reloaded!")
     except:
         await ctx.respond(f"`{extension}` cog does not exist")
-
-@reload.after_invoke
-async def sync_commands():
-    await bot.sync_commands()
 
 
 keep_alive()
