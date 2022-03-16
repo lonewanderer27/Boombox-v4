@@ -1,0 +1,54 @@
+import discord
+from discord.ext import tasks, commands
+from discord.commands import slash_command
+from itertools import cycle
+import random
+
+class Status(commands.Cog):
+
+    def __init__(self, bot):
+        self.bot = bot
+
+        self.taylor_swift_albums = cycle([
+            "Taylor Swift",
+            "Speak Now",
+            "1989",
+            "reputation",
+            "Lover",
+            "Folklore",
+            "Evermore",
+            "Fearless (Taylor's Version)",
+            "Red (Taylor's Version)"])
+
+        self.youtube_videos = cycle([
+            ['Polaroid Love', 'https://www.youtube.com/watch?v=vRdZVDWs3BI'],
+            ['Sa Susunod Na Habang Buhay', 'https://www.youtube.com/watch?v=yB2J6kXxJIY'],
+            ['Maybe The Night', 'https://www.youtube.com/watch?v=hJhVURhdLEg'],
+            ['Araw - Araw', 'https://www.youtube.com/watch?v=XVhEm62Uqog'],
+            ['Earl: Maybe The Night', 'https://www.youtube.com/watch?v=ND0mP8ftmQE'],
+            ['Leaves feat. Young K', 'https://www.youtube.com/watch?v=5oxxi0d7AQI']
+        ])
+
+        self.listening_activities = cycle([
+            next(self.taylor_swift_albums), 
+            "/help", 
+            f"{format(len(self.get_server_count(bot)))} servers"])
+
+        self.streaming_activities = cycle([discord.Streaming(platform="Youtube", name=next(self.youtube_videos[0]), url=next(self.youtube_videos[1]))])
+
+        self.activities_choices = cycle([discord.Activity(discord.ActivityType.listening, name=next(self.listening_activities))])
+
+    def get_server_count(self, bot):
+        return bot.guilds
+
+    def get_new_youtube_video(self, bot):
+        return random.choice(self.youtube_videos)
+
+    @tasks.loop(seconds=10)
+    async def change_activity(self, bot):
+        await bot.change_presence(activity=self.activities_choices)
+    
+
+def setup(bot):
+    print("Added Status cog!")
+    bot.add_cog(Status(bot))
