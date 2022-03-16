@@ -162,7 +162,7 @@ class Queue(commands.Cog):
 
     
     @slash_command(description=f"Shuffle queue of songs")
-    async def shuffle_queue(self, ctx):
+    async def shuffle(self, ctx):
         await self.shuffle_queue_func(ctx)
         self.is_shuffled = True
         await self.queue(ctx)
