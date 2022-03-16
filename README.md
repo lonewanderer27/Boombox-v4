@@ -15,8 +15,8 @@ This version is currently work in progress!
 
 ### Planned:
 - [ ] Allow the user to reorder queued music
-- [ ] Play Spotify links
-- [ ] Play playlist links
+- [ ] Support for other sources like Spotify, Apple Music, Deezer etc... 
+- [ ] Play songs from playlist
 - [ ] Optimize code further [Lyrics is already cached but I ain't gonna stop there]
 
 # Deploy the Bot!
