@@ -23,7 +23,7 @@ class YoutubeExtractor:
 
     def get_raw_ydl_response(self, song, amount):
         try:
-            info = self.ydl_extract_info_link
+            info = self.ydl_extract_info_link_cached(song)
             print("Playlist Link detected")
         except youtube_dl.utils.DownloadError:
             print("Name / Link detected")
