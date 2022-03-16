@@ -76,5 +76,5 @@ class Lyrics(commands.Cog):
 
 
 def setup(bot):
-    print("Added Lyrics cog!")
+    print(f"Added {__file__} cog!")
     bot.add_cog(Lyrics(bot))

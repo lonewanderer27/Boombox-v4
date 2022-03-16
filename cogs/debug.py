@@ -20,5 +20,5 @@ class Debug(commands.Cog):
         await ctx.respond(embed=embed)
 
 def setup(bot):
-    print("Added Debug cog!")
+    print(f"Added {__file__} cog!")
     bot.add_cog(Debug(bot))

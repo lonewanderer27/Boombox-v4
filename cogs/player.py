@@ -262,5 +262,5 @@ class Player(commands.Cog):
         
 
 def setup(bot):
-    print("Added Player cog!")
+    print(f"Added {__file__} cog!")
     bot.add_cog(Player(bot))

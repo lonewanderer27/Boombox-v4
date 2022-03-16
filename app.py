@@ -34,9 +34,9 @@ for file in os.listdir('./cogs'):
 
 @bot.event
 async def on_ready():
-    print(f"My name is {bot.user}")
-    print(f"and my ID is {bot.user.id}")
-    print(f"I'm logged in and ready!")
+    print(f"Name: {bot.user}")
+    print(f"ID: {bot.user.id}")
+    print(f"Logged in and ready!")
 
 @bot.slash_command(guild_ids=TESTING_SERVERS, description="Unloads a cog")
 async def unload(ctx , extension: Option(str, "The name of the cog module you want to unload")):

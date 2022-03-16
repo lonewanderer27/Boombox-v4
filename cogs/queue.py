@@ -68,5 +68,5 @@ class Queue(commands.Cog):
 
 
 def setup(bot):
-    print("Added Queue cog!")
+    print(f"Added {__file__} cog!")
     bot.add_cog(Queue(bot))

@@ -56,5 +56,5 @@ class Help(commands.Cog):
     #         await channel.send(ht)
 
 def setup(bot):
-    print("Added Help cog!")
+    print(f"Added {__file__} cog!")
     bot.add_cog(Help(bot))
