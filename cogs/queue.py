@@ -100,7 +100,7 @@ class Queue(commands.Cog):
 
     
     @slash_command(description=f"Play music on vc")
-    async def play(self, ctx, song: Option(str, "Song's title or Youtube Link"), artist: Option(str, "Song's artist", default="")):
+    async def play(self, ctx, song: Option(str, "Song's title or Youtube Link [Including Playlists!]"), artist: Option(str, "Song's artist", default="")):
         if artist == "":
             song_display = song
         else:
