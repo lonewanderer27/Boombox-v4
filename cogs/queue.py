@@ -3,7 +3,6 @@ import discord
 from discord import slash_command, Embed, Option, FFmpegPCMAudio
 from discord.ext import commands
 from app import TESTING_SERVERS, data, FRIENDLY_BOT_NAME, DEFAULT_COMMAND_PREFIX
-from youtube_dl import YoutubeDL
 from cogs.player import Player
 from cogs.utils import playing_now_embed, LinkVerifier
 from cogs.downloader_utils import YoutubeExtractor
