@@ -4,7 +4,9 @@ Next major release of Boombox, rewritten from the ground up to utilize cogs and 
 This version is currently work in progress!
 
 # Features!
-- Play a Youtube video or link
+- Play
+    - Song's title
+    - Youtube link, including playlist
 - Pause / Next / Stop the music
 - Shuffle
 - Display lyrics
@@ -16,8 +18,7 @@ This version is currently work in progress!
 ### Planned:
 - [ ] Allow the user to reorder queued music
 - [ ] Support for other sources like Spotify, Apple Music, Deezer etc... 
-- [ ] Play songs from playlist
-- [ ] Optimize code further [Lyrics is already cached but I ain't gonna stop there]
+- [ ] Optimize code further [Getting the playable youtube link & its lyrics is now faster thanks to this!]
 
 # Deploy the Bot!
 Coming soon! Wait till I get to a stable release!
