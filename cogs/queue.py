@@ -26,7 +26,7 @@ class Queue(commands.Cog):
             ctx.guild.voice_client.stop()
             asyncio.run_coroutine_threadsafe(ctx.channel.send(f"There was an error playing {data[ctx.guild.id]['songs'][0]['title']}. Skipping"), self.bot.loop)
 
-    def added_to_queue_embed(title, webpage_url, thumbnail_url, uploader):
+    def added_to_queue_embed(self, title, webpage_url, thumbnail_url, uploader):
         '''Creates an Discord Embed that shows the song has been added to queue.'''
         embed=Embed(color=0x44a8de, title="Added to queue")
         embed.set_thumbnail(url=thumbnail_url)
