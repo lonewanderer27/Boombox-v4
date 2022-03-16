@@ -18,7 +18,7 @@ This version is currently work in progress!
 ### Planned:
 - [ ] Allow the user to reorder queued music
 - [ ] Support for other sources like Spotify, Apple Music, Deezer etc... 
-- [ ] Optimize code further [Getting the playable youtube link & its lyrics is now faster thanks to this!]
+- [ ] Optimize code further [Getting yt link & lyrics is now faster thanks to this!]
 
 # Deploy the Bot!
 Coming soon! Wait till I get to a stable release!
