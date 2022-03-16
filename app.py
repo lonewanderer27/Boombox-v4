@@ -38,22 +38,6 @@ async def on_ready():
     print(f"ID: {bot.user.id}")
     print(f"Logged in and ready!")
 
-@bot.slash_command(guild_ids=TESTING_SERVERS, description="Unloads a cog")
-async def unload(ctx , extension: Option(str, "The name of the cog module you want to unload")):
-    try:
-        bot.unload_extension(f'cogs.{extension}')
-        await ctx.respond(f"`{extension}` cog was successfully unloaded!")
-    except:
-        await ctx.respond(f"`{extension}` cog does not exist")
-    
-@bot.slash_command(guild_ids=TESTING_SERVERS, description="Loads a cog")
-async def load(ctx,extension: Option(str, "The name of the cog module you want to load")):
-    try:
-        bot.load_extension(f'cogs.{extension}')
-        await ctx.respond(f"`{extension}` cog was successfully loaded!")
-    except:
-        await ctx.respond(f"`{extension}` cog does not exist")
-
 @bot.slash_command(guild_ids=TESTING_SERVERS, description="Reloads a cog module")
 async def reload(ctx, extension: Option(str, "The name of the cog module you want to load")):
     try:
@@ -61,6 +45,10 @@ async def reload(ctx, extension: Option(str, "The name of the cog module you wan
         await ctx.respond(f"`{extension}` cog was successfully reloaded!")
     except:
         await ctx.respond(f"`{extension}` cog does not exist")
+
+@reload.after_invoke
+async def sync_commands():
+    await bot.sync_commands()
 
 
 keep_alive()

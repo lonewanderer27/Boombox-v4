@@ -1,13 +1,61 @@
-from discord import slash_command, Embed
+from pprint import pprint
+import discord
+from discord import slash_command, Embed, Option, FFmpegPCMAudio
 from discord.ext import commands
-from app import TESTING_SERVERS, data
+from app import TESTING_SERVERS, data, FRIENDLY_BOT_NAME, DEFAULT_COMMAND_PREFIX
+from youtube_dl import YoutubeDL
+from cogs.player import Player
+from cogs.utils import playing_now_embed, LinkVerifier
+from cogs.downloader_utils import YoutubeExtractor
 import random
+import asyncio
+
 
 class Queue(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
         self.is_shuffled = False
+        self.youtube_extractor = YoutubeExtractor()
+        self.link_verifier = LinkVerifier()
+        self.FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5','options': '-vn'}
+        self.ensure_bot_is_connected = Player.ensure_bot_is_connected
+
+    def error_playing_song(self, e, ctx):
+        if e:
+            ctx.guild.voice_client.stop()
+            asyncio.run_coroutine_threadsafe(ctx.channel.send(f"There was an error playing {data[ctx.guild.id]['songs'][0]['title']}. Skipping"), self.bot.loop)
+
+    def added_to_queue_embed(title, webpage_url, thumbnail_url, uploader):
+        '''Creates an Discord Embed that shows the song has been added to queue.'''
+        embed=Embed(color=0x44a8de, title="Added to queue")
+        embed.set_thumbnail(url=thumbnail_url)
+        embed.add_field(name=uploader, value=f"[{title}]({webpage_url})", inline=False)
+        return embed
+    
+    async def remove_unavailable_links_from_songs(self, songs):
+        links = []
+        for song in songs:
+            source = song['source']
+            links.append(source)
+        responses = await self.link_verifier.execute_link_verifier(links)
+        print(responses)
+
+        num = 0
+        available_songs = []
+        for song in songs:
+            if responses[num] == 200:
+                available_songs.append(songs[num])
+            num += 1 
+
+        unavailable_songs = []
+        for song in songs:
+            if song not in available_songs:
+                unavailable_songs.append(song)
+        return available_songs, unavailable_songs
+    
+    def add_to_queue(self, ctx, songs):
+        data[ctx.guild.id]['songs'].extend(songs)
 
     async def shuffle_queue_func(self, ctx):
         songs_list = data[ctx.guild.id]['songs']
@@ -22,6 +70,95 @@ class Queue(commands.Cog):
             data[ctx.guild.id]['songs'] = shuffled_songs_list
         else:
             return await ctx.respond(embed=Embed(color=0x44a8de, title="Queue", description="There aren't enough songs to shuffle."))
+
+    
+    async def play_song(self, ctx):
+        print(f"{len(data[ctx.guild.id]['songs'])} song(s) left")
+
+        if len(data[ctx.guild.id]['songs']) > 0:
+            title = data[ctx.guild.id]['songs'][0]['title']                     # title of the video
+            webpage_url = data[ctx.guild.id]['songs'][0]['webpage_url']         # normal youtube url
+            source = data[ctx.guild.id]['songs'][0]['source']                   # streamable youtube url by FFMPEG
+            thumbnail_url = data[ctx.guild.id]['songs'][0]['thumbnail_url']     # thumbnail url
+
+            # it's ctx.channel.send here because ctx.respond causes invalid webhook token.
+            await ctx.channel.send(embed=playing_now_embed(ctx))    
+            ctx.guild.voice_client.play(FFmpegPCMAudio(source, **self.FFMPEG_OPTIONS), after = lambda e: self.error_playing_song(e, ctx))
+
+            while ctx.guild.voice_client.is_playing() or ctx.guild.voice_client.is_paused():
+                await asyncio.sleep(2)  # wait for 2 seconds before checking to avoid playing the next song too fast
+
+            loop = data[ctx.guild.id]['loop_current_music']                     # do we loop the song?
+            print(f"{title} finished playing! Loop: {loop}")
+            if len(data[ctx.guild.id]['songs']) != 0 and not loop:
+                print(f"Removing {title} from the queue")
+                data[ctx.guild.id]['songs'].pop(0)
+
+            await self.play_song(ctx)
+        else:
+            await ctx.channel.send(embed=Embed(title="Queue", description="There are no more songs in the queue."))
+
+    
+    @slash_command(description=f"Play music on vc")
+    async def play(self, ctx, song: Option(str, "Song's title or Youtube Link"), artist: Option(str, "Song's artist", default="")):
+        if artist == "":
+            song_display = song
+        else:
+            song_display = f"{song} - {artist}"
+        await ctx.respond(f"Searching for {song_display}")
+
+        songs = self.youtube_extractor.main(song_display)
+        songs, unavailable_songs = await self.remove_unavailable_links_from_songs(songs)
+        print("Available Songs: ")
+        pprint(songs)
+        pprint("Unavailable Songs: ")
+        pprint(unavailable_songs)
+
+        self.add_to_queue(ctx, songs)
+        
+        if not ctx.guild.voice_client.is_playing():
+            await self.play_song(ctx)
+        else:
+            if len(songs) > 1:
+                await ctx.channel.send("The playlist has been added!")
+            else:
+                fs = songs[0]
+                await ctx.channel.send(embed=self.added_to_queue_embed(fs['title'], fs['webpage_url'], fs['thumbnail_url'], fs['uploader']))
+
+        
+
+        # with YoutubeDL({'format': 'bestaudio', 'noplaylist':'True'}) as ydl:
+        #     try: 
+        #         requests.get(title)
+        #     except: 
+        #         info = ydl.extract_info(f"ytsearch:{song_display} lyrics", download=False)['entries'][0]
+        #     else:
+        #         info = ydl.extract_info(title, download=False)        
+
+        # if not verify_yt_link(info['formats'][0]['url']):
+        #     
+        #     await ctx.channel.send(f"I apologize, {song_display} song cannot be added to queue. Please try again..")
+        #     return
+
+        # video, source = (info, info['formats'][0]['url'])
+
+        # data[ctx.guild.id]['songs'].append({
+        #         'title': info['title'],
+        #         'user_search_term': song_display,
+        #         'uploader': info['uploader'],
+        #         'channel_url': info['channel_url'],
+        #         'webpage_url': info['webpage_url'],
+        #         'source': info['formats'][0]['url'],
+        #         'thumbnail_url': info['thumbnails'][0]['url'],
+        #         'loop': False
+        #     },)
+
+        # await ctx.delete()
+        # if not ctx.guild.voice_client.is_playing():
+            
+        #     await self.play_song(ctx)
+        # else:
+        #     await ctx.channel.send(embed=self.added_to_queue_embed(info['title'], info['webpage_url'], info['thumbnails'][0]['url'], info['uploader']))
 
     
     @slash_command(description=f"Shuffle queue of songs")
@@ -65,6 +202,30 @@ class Queue(commands.Cog):
             return await ctx.respond(embed=embed)
         else:
             return await ctx.respond(embed=embed)
+
+    @play.before_invoke
+    async def ensure_bot_is_connected(self, ctx):
+        if ctx.guild.voice_client == None:
+            await ctx.respond(f"{FRIENDLY_BOT_NAME} is not connected to any channel")
+            raise discord.ApplicationCommandInvokeError(f"{FRIENDLY_BOT_NAME} is not connected to any channel")
+
+        try:
+            print("data:")
+            pprint(data)
+            data[ctx.guild.id]
+            print(f"{ctx.guild.name}'s data: OK!")
+
+        except KeyError:
+            print(f"{ctx.guild.name} data doesn't exist yet, creating...")
+            data[ctx.guild.id] = {
+                'guild_name': ctx.guild.name,
+                'command_prefix': DEFAULT_COMMAND_PREFIX,
+                'songs': [],
+                'loop_current_music': False,
+            }
+            print(f"{ctx.guild.name} has been created!")
+            print("data:")
+            pprint(data)
 
 
 def setup(bot):

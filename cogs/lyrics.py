@@ -13,6 +13,9 @@ class Lyrics(commands.Cog):
         self.bot = bot
         self.song_lyrics = SongLyrics(os.environ['BOOMBOX_PROGRAMMABLE_SEARCH_ENGINE_KEY'], os.environ['BOOMBOX_PROGRAMMABLE_SEARCH_ENGINE_ID'])
 
+    def verify_if_english(text):
+        return text.isascii()
+
     @cache
     def get_song_lyrics(self, title):
         return self.song_lyrics.get_lyrics(title)
@@ -51,6 +54,7 @@ class Lyrics(commands.Cog):
                 return
             if ctx.guild.voice_client.is_playing():
                 title = data[ctx.guild.id]['songs'][0]['title']
+                user_search_term = data[ctx.guild.id]['songs'][0]['user_search_term']
 
         if artist == "":
             song_display = title
@@ -59,7 +63,8 @@ class Lyrics(commands.Cog):
 
         await ctx.respond(f"Searching the lyrics of {song_display}")
         try:
-            song_data = self.get_song_lyrics(song_display)
+            song_data = self.get_song_lyrics(song_display if song_display.isascii() else user_search_term)
+            print(song_data)
         except:
             await ctx.interaction.edit_original_message(content="I apologize there has been error. Please try again later.")
 
@@ -70,8 +75,8 @@ class Lyrics(commands.Cog):
         else:
             lyrics_splitted = self.lyrics_splitter(song_data)
             embed_list = self.song_lyrics_embed_list_maker(song_data, lyrics_splitted)
-        
-        print("proof that this reloaded!")
+
+        print("proof that this module was reloaded!!!!!")
         await ctx.interaction.edit_original_message(content=None,embeds=embed_list)
 
 

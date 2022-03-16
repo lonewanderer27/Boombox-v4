@@ -1,16 +1,11 @@
 import discord
-from discord import FFmpegPCMAudio
 from discord.commands import slash_command, Option, SlashCommandGroup
 from discord.ext import commands
-from youtube_dl import YoutubeDL
-import requests
 import asyncio
 from pprint import pprint
 from app import TESTING_SERVERS, FRIENDLY_BOT_NAME, DEFAULT_COMMAND_PREFIX, data
-from cogs.player_utils import playing_now_embed, added_to_queue_embed, verify_yt_link
+from cogs.utils import playing_now_embed
 
-# SET FFMPEG OPTIONS
-FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5','options': '-vn'}
 
 class Player(commands.Cog):
 
@@ -24,39 +19,6 @@ class Player(commands.Cog):
             return False
         return True
 
-
-    def error_playing_song(self, e, ctx):
-        if e:
-            ctx.guild.voice_client.stop()
-            asyncio.run_coroutine_threadsafe(ctx.channel.send(f"There was an error playing {data[ctx.guild.id]['songs'][0]['title']}. Skipping"), self.bot.loop)
-
-    
-    async def play_song(self, ctx):
-        print(f"{len(data[ctx.guild.id]['songs'])} song(s) left")
-
-        if len(data[ctx.guild.id]['songs']) > 0:
-            title = data[ctx.guild.id]['songs'][0]['title']                     # title of the video
-            webpage_url = data[ctx.guild.id]['songs'][0]['webpage_url']         # normal youtube url
-            source = data[ctx.guild.id]['songs'][0]['source']                   # streamable youtube url by FFMPEG
-            thumbnail_url = data[ctx.guild.id]['songs'][0]['thumbnail_url']     # thumbnail url
-
-            # it's ctx.channel.send here because ctx.respond causes invalid webhook token.
-            await ctx.channel.send(embed=playing_now_embed(ctx))    
-            ctx.guild.voice_client.play(FFmpegPCMAudio(source, **FFMPEG_OPTIONS), after = lambda e: self.error_playing_song(e, ctx))
-
-            while ctx.guild.voice_client.is_playing() or ctx.guild.voice_client.is_paused():
-                await asyncio.sleep(2)  # wait for 2 seconds before checking to avoid playing the next song too fast
-
-            loop = data[ctx.guild.id]['loop_current_music']                     # do we loop the song?
-            print(f"{title} finished playing! Loop: {loop}")
-            if len(data[ctx.guild.id]['songs']) != 0 and not loop:
-                print(f"Removing {title} from the queue")
-                data[ctx.guild.id]['songs'].pop(0)
-
-            await self.play_song(ctx)
-        else:
-            await ctx.channel.send(embed=discord.Embed(title="Queue", description="There are no more songs in the queue."))
-
     
     @slash_command(description=f"Show what's currently playing on vc")
     async def playing_now(self, ctx):
@@ -66,47 +28,6 @@ class Player(commands.Cog):
             await ctx.respond("Nothing is playing right now")
         except KeyError:
             await ctx.respond("Nothing is playing right now")
-
-
-    @slash_command(description=f"Play music on vc")
-    async def play(self, ctx, title: Option(str, "Song's title or Youtube Link"), artist: Option(str, "Song's artist", default="")):
-        if artist == "":
-            song_display = title
-        else:
-            song_display = f"{title} - {artist}"
-        await ctx.respond(f"Searching for {song_display}")
-
-        with YoutubeDL({'format': 'bestaudio', 'noplaylist':'True'}) as ydl:
-            try: 
-                requests.get(title)
-            except: 
-                info = ydl.extract_info(f"ytsearch:{song_display} lyrics", download=False)['entries'][0]
-            else:
-                info = ydl.extract_info(title, download=False)        
-
-        if not verify_yt_link(info['formats'][0]['url']):
-            await ctx.delete()
-            await ctx.respond(f"I apologize, {song_display} song cannot be added to queue. Please try again..")
-            return
-
-        video, source = (info, info['formats'][0]['url'])
-
-        data[ctx.guild.id]['songs'].append({
-                'title': info['title'],
-                'uploader': info['uploader'],
-                'channel_url': info['channel_url'],
-                'webpage_url': info['webpage_url'],
-                'source': info['formats'][0]['url'],
-                'thumbnail_url': info['thumbnails'][0]['url'],
-                'loop': False
-            },)
-
-        await ctx.delete()
-        if not ctx.guild.voice_client.is_playing():
-            
-            await self.play_song(ctx)
-        else:
-            await ctx.channel.send(embed=added_to_queue_embed(info['title'], info['webpage_url'], info['thumbnails'][0]['url'], info['uploader']))
 
     
     @slash_command(description=f"Pauses the music on vc")
@@ -222,7 +143,6 @@ class Player(commands.Cog):
             await ctx.respond(f"I'm already connected in {ctx.guild.voice_client.channel.mention}")
 
 
-    @play.after_invoke
     @pause.after_invoke
     @resume.after_invoke
     async def set_last_channel_that_triggered_command(self, ctx):
@@ -231,7 +151,6 @@ class Player(commands.Cog):
         
 
     @loop.before_invoke
-    @play.before_invoke
     @pause.before_invoke
     @resume.before_invoke
     @move.before_invoke
