@@ -1,11 +1,12 @@
 import os
+import textwrap
 import discord
 from discord.commands import slash_command, Option
 from discord.ext import commands
 from app import data
-import textwrap
 from lyrics_extractor import SongLyrics
 from functools import cache
+
 
 class Lyrics(commands.Cog):
 
@@ -13,7 +14,7 @@ class Lyrics(commands.Cog):
         self.bot = bot
         self.song_lyrics = SongLyrics(os.environ['BOOMBOX_PROGRAMMABLE_SEARCH_ENGINE_KEY'], os.environ['BOOMBOX_PROGRAMMABLE_SEARCH_ENGINE_ID'])
 
-    def verify_if_english(text):
+    def verify_if_english(self, text):
         return text.isascii()
 
     @cache
