@@ -1,8 +1,7 @@
-import discord
-from discord.commands import slash_command, Option, SlashCommandGroup
-from discord.ext import commands
-import asyncio
 from pprint import pprint
+import discord
+from discord.commands import slash_command, Option
+from discord.ext import commands
 from app import FRIENDLY_BOT_NAME, DEFAULT_COMMAND_PREFIX, data
 from cogs.utils import playing_now_embed
 
@@ -183,3 +182,4 @@ class Player(commands.Cog):
 def setup(bot):
     print(f"Added {__file__} cog!")
     bot.add_cog(Player(bot))
+    

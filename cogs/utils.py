@@ -1,23 +1,23 @@
 from discord import Embed
 from app import data
-import asyncio
 import aiohttp
+import asyncio
 
 
 def playing_now_embed(ctx):
-        '''Creates an Discord Embed that shows the currently playing song.'''
-        embed= Embed(color=0x44a8de, title="Playing Now")
-        embed.set_thumbnail(url=data[ctx.guild.id]['songs'][0]['thumbnail_url'])
-        title= data[ctx.guild.id]['songs'][0]['title']
-        webpage_url = data[ctx.guild.id]['songs'][0]['webpage_url']
-        uploader = data[ctx.guild.id]['songs'][0]['uploader']
-        embed.add_field(
-            name=uploader, 
-            value=f"[{title}]({webpage_url})",
-            inline=True)
-        embed.set_footer(text=f"Looping: {'Yes' if data[ctx.guild.id]['loop_current_music'] else 'No'}", icon_url=Embed.Empty)
-        return embed
-        
+    '''Creates an Discord Embed that shows the currently playing song.'''
+    embed= Embed(color=0x44a8de, title="Playing Now")
+    embed.set_thumbnail(url=data[ctx.guild.id]['songs'][0]['thumbnail_url'])
+    title= data[ctx.guild.id]['songs'][0]['title']
+    webpage_url = data[ctx.guild.id]['songs'][0]['webpage_url']
+    uploader = data[ctx.guild.id]['songs'][0]['uploader']
+    embed.add_field(
+        name=uploader,  
+        value=f"[{title}]({webpage_url})",
+        inline=True)
+    embed.set_footer(text=f"Looping: {'Yes' if data[ctx.guild.id]['loop_current_music'] else 'No'}", icon_url=Embed.Empty)
+    return embed
+
 
 class LinkVerifier:
 
