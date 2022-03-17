@@ -19,7 +19,7 @@ class YoutubeExtractor:
 
     @cache
     def ydl_extract_info_link_cached(self, song):
-        info = self.ydl.extract_info(song, download=False)
+        return self.ydl.extract_info(song, download=False)
 
     def get_raw_ydl_response(self, song, amount):
         try:
