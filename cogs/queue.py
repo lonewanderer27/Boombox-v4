@@ -3,7 +3,6 @@ import discord
 from discord import slash_command, Embed, Option, FFmpegPCMAudio
 from discord.ext import commands
 from app import TESTING_SERVERS, data, FRIENDLY_BOT_NAME, DEFAULT_COMMAND_PREFIX
-from cogs.player import Player
 from cogs.utils import playing_now_embed, LinkVerifier
 from cogs.downloader_utils import YoutubeExtractor
 import random
@@ -18,7 +17,7 @@ class Queue(commands.Cog):
         self.youtube_extractor = YoutubeExtractor()
         self.link_verifier = LinkVerifier()
         self.FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5','options': '-vn'}
-        self.ensure_bot_is_connected = Player.ensure_bot_is_connected
+
 
     def error_playing_song(self, e, ctx):
         if e:

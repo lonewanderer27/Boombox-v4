@@ -23,15 +23,3 @@ def added_to_queue_embed(title, webpage_url, thumbnail_url, uploader):
     embed.set_thumbnail(url=thumbnail_url)
     embed.add_field(name=uploader, value=f"[{title}]({webpage_url})", inline=False)
     return embed
-
-
-def verify_yt_link(source):
-    print(f"verifies if this link works:\n{source}")
-    try:
-        urllib.request.urlopen(source).getcode()
-    except:
-        print("Link did not worked :/")
-        return False
-    else:
-        print("Link worked!")
-        return True
