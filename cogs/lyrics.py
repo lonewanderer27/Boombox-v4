@@ -2,7 +2,7 @@ import os
 import discord
 from discord.commands import slash_command, Option
 from discord.ext import commands
-from app import TESTING_SERVERS, data
+from app import data
 import textwrap
 from lyrics_extractor import SongLyrics
 from functools import cache

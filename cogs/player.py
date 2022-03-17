@@ -3,7 +3,7 @@ from discord.commands import slash_command, Option, SlashCommandGroup
 from discord.ext import commands
 import asyncio
 from pprint import pprint
-from app import TESTING_SERVERS, FRIENDLY_BOT_NAME, DEFAULT_COMMAND_PREFIX, data
+from app import FRIENDLY_BOT_NAME, DEFAULT_COMMAND_PREFIX, data
 from cogs.utils import playing_now_embed
 
 

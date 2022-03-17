@@ -19,6 +19,7 @@ class Debug(commands.Cog):
         embed.set_footer(text="Note: Guild is the internal name of Server. They're the same.", icon_url=discord.Embed.Empty)
         await ctx.respond(embed=embed)
 
+
 def setup(bot):
     print(f"Added {__file__} cog!")
     bot.add_cog(Debug(bot))
