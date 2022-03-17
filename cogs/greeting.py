@@ -1,7 +1,6 @@
-import discord
 from discord.commands import slash_command, Option
 from discord.ext import commands
-from app import DEFAULT_COMMAND_PREFIX, TESTING_SERVERS, FRIENDLY_BOT_NAME
+from app import DEFAULT_COMMAND_PREFIX, FRIENDLY_BOT_NAME
 
 
 class Greeting(commands.Cog):
@@ -10,25 +9,25 @@ class Greeting(commands.Cog):
         self.bot = bot
 
     @commands.Cog.listener()
-    async def on_message(self, message):
-        bot = self.bot
-        channel = message.channel
-        guild_id = str(message.guild.id)
-        guild_name = message.guild.name
+    async def on_message(self, ctx):
 
-        if not message.author.bot:
-            print(f"{message.author.name}#{message.author.discriminator}: {message.content}")
+        if not ctx.author.bot:
+            return
 
-        if message.content.startswith(f"{DEFAULT_COMMAND_PREFIX}Hi"):
-            await channel.send("Hello!")
+        if ctx.message.content.startswith(f"{DEFAULT_COMMAND_PREFIX}ping"):
+            await ctx.send("pong!")
+    
+    @slash_command
+    async def ping(
+        self,
+        ctx,
+    ):
+        await ctx.respond("pong!")
 
-        elif message.content.startswith(f"{DEFAULT_COMMAND_PREFIX}Hello"):
-            await channel.send("Hi!")
-
-    @slash_command(description=f"Makes {FRIENDLY_BOT_NAME} say a message for you!", name="simon_says")
+    @slash_command(description=f"Makes {FRIENDLY_BOT_NAME} say a message for you!")
     async def simon_says(
         self, 
-        ctx: discord.ApplicationContext, 
+        ctx,
         message: Option(str, f"Message that you want {FRIENDLY_BOT_NAME} to repeat")):
         await ctx.respond(message)
 
