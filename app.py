@@ -23,7 +23,7 @@ handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(me
 logger.addHandler(handler)
 
 discord.http.API_VERSION=9
-bot = discord.Bot(description=DESCRIPTION, debug_guilds=TESTING_SERVERS)
+bot = discord.Bot(description=DESCRIPTION, debug_guilds=TESTING_SERVERS, help_command=None)
 
 for file in os.listdir('./cogs'):
     if file.endswith('utils.py') or file == "__init__.py":

@@ -15,11 +15,3 @@ def playing_now_embed(ctx):
             inline=True)
         embed.set_footer(text=f"Looping: {'Yes' if data[ctx.guild.id]['loop_current_music'] else 'No'}", icon_url=Embed.Empty)
         return embed
-
-
-def added_to_queue_embed(title, webpage_url, thumbnail_url, uploader):
-    '''Creates an Discord Embed that shows the song has been added to queue.'''
-    embed=Embed(color=0x44a8de, title="Added to queue")
-    embed.set_thumbnail(url=thumbnail_url)
-    embed.add_field(name=uploader, value=f"[{title}]({webpage_url})", inline=False)
-    return embed

@@ -18,7 +18,6 @@ class Queue(commands.Cog):
         self.link_verifier = LinkVerifier()
         self.FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5','options': '-vn'}
 
-
     def error_playing_song(self, e, ctx):
         if e:
             ctx.guild.voice_client.stop()
@@ -68,7 +67,6 @@ class Queue(commands.Cog):
             data[ctx.guild.id]['songs'] = shuffled_songs_list
         else:
             return await ctx.respond(embed=Embed(color=0x44a8de, title="Queue", description="There aren't enough songs to shuffle."))
-
     
     async def play_song(self, ctx):
         print(f"{len(data[ctx.guild.id]['songs'])} song(s) left")
@@ -95,7 +93,6 @@ class Queue(commands.Cog):
             await self.play_song(ctx)
         else:
             await ctx.channel.send(embed=Embed(title="Queue", description="There are no more songs in the queue."))
-
     
     @slash_command(description=f"Play music on vc")
     async def play(self, ctx, song: Option(str, "Song's title or Youtube Link [Including Playlists!]"), artist: Option(str, "Song's artist", default="")):
@@ -121,17 +118,7 @@ class Queue(commands.Cog):
                 await ctx.channel.send("The playlist has been added!")
             else:
                 fs = songs[0]
-                await ctx.channel.send(embed=self.added_to_queue_embed(fs['title'], fs['webpage_url'], fs['thumbnail_url'], fs['uploader']))
-
-        
-
-        # with YoutubeDL({'format': 'bestaudio', 'noplaylist':'True'}) as ydl:
-        #     try: 
-        #         requests.get(title)
-        #     except: 
-        #         info = ydl.extract_info(f"ytsearch:{song_display} lyrics", download=False)['entries'][0]
-        #     else:
-        #         info = ydl.extract_info(title, download=False)        
+                await ctx.channel.send(embed=self.added_to_queue_embed(fs['title'], fs['webpage_url'], fs['thumbnail_url'], fs['uploader']))  
 
         # if not verify_yt_link(info['formats'][0]['url']):
         #     
@@ -164,7 +151,6 @@ class Queue(commands.Cog):
         await self.shuffle_queue_func(ctx)
         self.is_shuffled = True
         await self.queue(ctx)
-            
 
     @slash_command(description=f"Show queue of songs")
     async def queue(self, ctx):

@@ -17,7 +17,7 @@ def playing_now_embed(ctx):
             inline=True)
         embed.set_footer(text=f"Looping: {'Yes' if data[ctx.guild.id]['loop_current_music'] else 'No'}", icon_url=Embed.Empty)
         return embed
-
+        
 
 class LinkVerifier:
 
