@@ -177,9 +177,7 @@ class Player(commands.Cog):
             print("data:")
             pprint(data)
 
-        
 
 def setup(bot):
     print(f"Added {__file__} cog!")
     bot.add_cog(Player(bot))
-    
