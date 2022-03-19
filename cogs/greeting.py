@@ -7,21 +7,9 @@ class Greeting(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-
-    @commands.Cog.listener()
-    async def on_message(self, ctx):
-
-        if not ctx.author.bot:
-            return
-
-        if ctx.message.content.startswith(f"{DEFAULT_COMMAND_PREFIX}ping"):
-            await ctx.send("pong!")
     
     @slash_command
-    async def ping(
-        self,
-        ctx,
-    ):
+    async def ping(self,ctx):
         await ctx.respond("pong!")
 
     @slash_command(description=f"Makes {FRIENDLY_BOT_NAME} say a message for you!")
