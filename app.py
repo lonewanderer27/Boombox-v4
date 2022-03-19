@@ -38,7 +38,7 @@ async def on_ready():
     print(f"ID: {bot.user.id}")
     print(f"Logged in and ready!")
 
-@bot.slash_command(guild_ids=TESTING_SERVERS, description="Reloads a cog module")
+@bot.slash_command(description="Reloads a cog module")
 async def reload(ctx, extension: Option(str, "The name of the cog module you want to load")):
     try:
         bot.reload_extension(f"cogs.{extension}")
