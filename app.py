@@ -1,9 +1,7 @@
 import os
-import random
 import logging
 import discord
 from discord import Option
-from discord.ext import commands
 from keep_alive import keep_alive
 
 # SET DEFAULT BOT SETTINGS & GLOBAL VARS
