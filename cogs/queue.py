@@ -117,7 +117,8 @@ class Queue(commands.Cog):
             if len(songs) > 1:
                 await ctx.channel.send("The playlist has been added!")
             else:
-                fs = songs[0]
+                await ctx.delete()
+                fs = songs[0]   # fs = first song in the songs queue
                 await ctx.channel.send(embed=self.added_to_queue_embed(fs['title'], fs['webpage_url'], fs['thumbnail_url'], fs['uploader']))  
 
         # if not verify_yt_link(info['formats'][0]['url']):
