@@ -95,11 +95,11 @@ class Queue(commands.Cog):
             await ctx.channel.send(embed=Embed(title="Queue", description="There are no more songs in the queue."))
     
     @slash_command(description=f"Play music on vc")
-    async def play(self, ctx, song: Option(str, "Song's title or Youtube Link [Including Playlists!]"), artist: Option(str, "Song's artist", default="")):
+    async def play(self, ctx, title: Option(str, "Song's title or Youtube Link [Including Playlists!]"), artist: Option(str, "Song's artist", default="")):
         if artist == "":
-            song_display = song
+            song_display = title
         else:
-            song_display = f"{song} - {artist}"
+            song_display = f"{title} - {artist}"
         await ctx.respond(f"Searching for {song_display}")
 
         songs = self.youtube_extractor.main(song_display)
