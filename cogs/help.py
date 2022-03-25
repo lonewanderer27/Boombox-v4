@@ -7,12 +7,33 @@ class Help(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        self.slash_help = f'''
+**__{FRIENDLY_BOT_NAME.title()} Guide:__**
+`/help` : sends this help message!
 
-    def help_text(self, command_prefix):
+**Music Commands:**
+`/join` : make {FRIENDLY_BOT_NAME} to your current voice channel
+`/play <Song Title | Optional: Youtube Link [Song or Playlist], Artist Name>` : searches the music and plays it, alternatively single or playlist link also works
+`/pause` : pauses the currently playing song
+`/resume` : resumes the paused song
+`/skip` : skips to the next song
+`playing_now` : shows the currently playing song
+`/lyrics <Optional: Song Title, Artist>` : shows the lyrics of currently playing song, alternatively you can also search by entering the song title
+`/move <Voice Channel>` : moves the bot to another voice channel
+`/queue` : displays the songs in queue
+`/shuffle` : shuffles the songs in queue
+`/disconnect` : disconnects the bot from voice channel
+
+**Other Commands:**
+`/simon_says` : make {FRIENDLY_BOT_NAME} say a message on behalf of you
+`/ping` : ping {FRIENDLY_BOT_NAME}
+`/debug` : shows guild id, guild name, text channel and optionally voice channel if {FRIENDLY_BOT_NAME} is connected to voice channel
+'''
+
+    def help_prefix(self, command_prefix):
         f'''
 **__{FRIENDLY_BOT_NAME.title()} Guide:__**
 `{command_prefix}h` or `{command_prefix}help` : sends this help message!
-
 
 **Music Commands:**
 `{command_prefix}join` : joins the bot to the voice channel
@@ -38,21 +59,7 @@ class Help(commands.Cog):
 
     @slash_command(description=f"Show {FRIENDLY_BOT_NAME} help message", name="help")
     async def help(self, ctx: discord.ApplicationContext):
-        await ctx.respond(f"Type `/` and it will show you all of the available commands of {FRIENDLY_BOT_NAME}")
-
-    # @commands.Cog.listener()
-    # async def on_message(self, message):
-    #     bot = self.bot
-    #     channel = message.channel
-    #     guild_id = str(message.guild.id)
-    #     guild_name = message.guild.name
-
-    #     if not message.author.bot:
-    #         print(f"{message.author.name}#{message.author.discriminator}: {message.content}")
-
-    #     if message.content.startswith(f"{DEFAULT_COMMAND_PREFIX}help"):
-    #         ht = self.help_text(DEFAULT_COMMAND_PREFIX)
-    #         await channel.send(ht)
+        await ctx.respond(self.slash_help, ephemeral=True)
 
 def setup(bot):
     print(f"Added {__file__} cog!")
