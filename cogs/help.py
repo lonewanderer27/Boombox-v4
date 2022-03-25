@@ -13,12 +13,12 @@ class Help(commands.Cog):
 
 **Music Commands:**
 `/join` : make {FRIENDLY_BOT_NAME} to your current voice channel
-`/play <Song Title | Optional: Youtube Link [Song or Playlist], Artist Name>` : searches the music and plays it, alternatively single or playlist link also works
+`/play <Song Title | Optionals: Youtube Link [Song or Playlist], Artist Name>` : searches the music and plays it, alternatively single or playlist link also works
 `/pause` : pauses the currently playing song
 `/resume` : resumes the paused song
 `/skip` : skips to the next song
 `playing_now` : shows the currently playing song
-`/lyrics <Optional: Song Title, Artist>` : shows the lyrics of currently playing song, alternatively you can also search by entering the song title
+`/lyrics <Optionals: Song Title, Artist>` : shows the lyrics of currently playing song, alternatively you can also search by entering the song title
 `/move <Voice Channel>` : moves the bot to another voice channel
 `/queue` : displays the songs in queue
 `/shuffle` : shuffles the songs in queue
