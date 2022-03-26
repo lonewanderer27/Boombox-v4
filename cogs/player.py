@@ -1,4 +1,5 @@
 from pprint import pprint
+import time
 import discord
 from discord.commands import slash_command, Option
 from discord.ext import commands
@@ -60,12 +61,13 @@ class Player(commands.Cog):
         if ctx.author.voice.channel.id == ctx.guild.voice_client.channel.id:
 
             if ctx.guild.voice_client.is_playing():
-                loop_state = data[ctx.guild.id]['loop_current_music']
+                previous_loop_state = data[ctx.guild.id]['loop_current_music']
                 data[ctx.guild.id]['loop_current_music'] = False
+                time.sleep(1)
                 ctx.guild.voice_client.stop()
                 await ctx.respond("Skip ⏭️")
-                data[ctx.guild.id]['loop_current_music'] = loop_state
-                
+                data[ctx.guild.id]['loop_current_music'] = previous_loop_state
+                # print(f"Loop: {data[ctx.guild.id]['loop_current_music']}")
             else:
                 await ctx.respond("Nothing is playing right now")         
 
@@ -77,7 +79,7 @@ class Player(commands.Cog):
             if ctx.guild.voice_client.is_playing():
                 if data[ctx.guild.id]['loop_current_music']:
                     data[ctx.guild.id]['loop_current_music'] = False
-                    return await ctx.respond(f"{data[ctx.guild.id]['songs'][0]['title']} is going to stop looping")
+                    await ctx.respond(f"{data[ctx.guild.id]['songs'][0]['title']} is going to stop looping")
                 else:
                     data[ctx.guild.id]['loop_current_music'] = True
                     await ctx.respond(f"{data[ctx.guild.id]['songs'][0]['title']} is going to loop now!")
