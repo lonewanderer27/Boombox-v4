@@ -112,6 +112,7 @@ class Queue(commands.Cog):
         self.add_to_queue(ctx, songs)
         
         if not ctx.guild.voice_client.is_playing():
+            await ctx.delete()
             await self.play_song(ctx)
         else:
             if len(songs) > 1:
