@@ -8,6 +8,13 @@ class Debug(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    def get_latency(self):
+        return f"{round(self.bot.latency * 1000)}ms"
+
+    @slash_command(description=f"ping {FRIENDLY_BOT_NAME}")
+    async def ping(self,ctx):
+        await ctx.respond(f"pong! in {self.get_latency()}")
+
     @slash_command(description=f"shows various debug information")
     async def debug(self, ctx):
         embed = discord.Embed(title="Debug Info")
@@ -16,6 +23,7 @@ class Debug(commands.Cog):
         embed.add_field(name="Text Channel", value=ctx.interaction.channel.mention, inline=True)
         if ctx.guild.voice_client != None:
             embed.add_field(name="Voice Channel", value=ctx.guild.voice_client.channel.mention)
+        embed.add_field(name="Latency", value=self.get_latency())
         embed.set_footer(text="Note: Guild is the internal name of Server. They're the same.", icon_url=discord.Embed.Empty)
         await ctx.respond(embed=embed)
 
