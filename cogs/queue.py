@@ -94,8 +94,8 @@ class Queue(commands.Cog):
         else:
             await ctx.channel.send(embed=Embed(title="Queue", description="There are no more songs in the queue."))
     
-    @slash_command(description=f"Play music on vc")
-    async def play(self, ctx, title: Option(str, "Song's title or Youtube Link [Including Playlists!]"), artist: Option(str, "Song's artist", default="")):
+    @slash_command(description=f"searches the music and plays it, alternatively single or playlist link also works")
+    async def play(self, ctx, title: Option(str, "Song Title or Youtube Link [Song or Playlist]"), artist: Option(str, "Artist Name", default="")):
         if artist == "":
             song_display = title
         else:
@@ -147,13 +147,13 @@ class Queue(commands.Cog):
         #     await ctx.channel.send(embed=self.added_to_queue_embed(info['title'], info['webpage_url'], info['thumbnails'][0]['url'], info['uploader']))
 
     
-    @slash_command(description=f"Shuffle queue of songs")
+    @slash_command(description="shuffles the songs in queue")
     async def shuffle(self, ctx):
         await self.shuffle_queue_func(ctx)
         self.is_shuffled = True
         await self.queue(ctx)
 
-    @slash_command(description=f"Show queue of songs")
+    @slash_command(description="displays the songs in queue")
     async def queue(self, ctx):
         songs_list = data[ctx.guild.id]['songs']
 

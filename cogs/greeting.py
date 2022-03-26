@@ -1,6 +1,6 @@
 from discord.commands import slash_command, Option
 from discord.ext import commands
-from app import DEFAULT_COMMAND_PREFIX, FRIENDLY_BOT_NAME
+from app import FRIENDLY_BOT_NAME
 
 
 class Greeting(commands.Cog):
@@ -8,7 +8,7 @@ class Greeting(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
-    @slash_command(description=f"pings {FRIENDLY_BOT_NAME}")
+    @slash_command(description=f"ping {FRIENDLY_BOT_NAME}")
     async def ping(self,ctx):
         await ctx.respond("pong!")
 

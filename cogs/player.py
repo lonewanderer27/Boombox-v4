@@ -19,7 +19,7 @@ class Player(commands.Cog):
         return True
 
     
-    @slash_command(description="Show what's currently playing on vc")
+    @slash_command(description="shows the currently playing song")
     async def playing_now(self, ctx):
         try:
             if len(data[ctx.guild.id]['songs']) > 0 & ctx.guild.voice_client.is_playing():
@@ -29,7 +29,7 @@ class Player(commands.Cog):
             await ctx.respond("Nothing is playing right now")
 
     
-    @slash_command(description="Pauses the music on vc")
+    @slash_command(description="pauses the currently playing song")
     async def pause(self, ctx):
         if ctx.author.voice.channel.id == ctx.guild.voice_client.channel.id:
 
@@ -42,7 +42,7 @@ class Player(commands.Cog):
                 await ctx.respond("Nothing is playing right now")
 
     
-    @slash_command(description="Resumes the music on vc")
+    @slash_command(description="resumes the paused song")
     async def resume(self, ctx):
         if ctx.author.voice.channel.id == ctx.guild.voice_client.channel.id:
 
@@ -55,7 +55,7 @@ class Player(commands.Cog):
                 await ctx.respond("Nothing is playing right now")
 
     
-    @slash_command(description="Skips over the current music on vc")
+    @slash_command(description="skips to the next song")
     async def skip(self, ctx):
         if ctx.author.voice.channel.id == ctx.guild.voice_client.channel.id:
 
@@ -70,7 +70,7 @@ class Player(commands.Cog):
                 await ctx.respond("Nothing is playing right now")         
 
     
-    @slash_command(description="Loop the current music")
+    @slash_command(description="loop the current music")
     async def loop(self, ctx):
         if ctx.author.voice.channel.id == ctx.guild.voice_client.channel.id:
             pprint(data)
@@ -85,7 +85,7 @@ class Player(commands.Cog):
                 await ctx.respond("Nothing is playing right now")
 
     
-    @slash_command(description="Disconnects the bot from the vc")
+    @slash_command(description=f"disconnects {FRIENDLY_BOT_NAME} from voice channel")
     async def disconnect(self, ctx):
         if ctx.author.voice.channel.id == ctx.guild.voice_client.channel.id:
             await ctx.respond(f"Disconnecting from {ctx.guild.voice_client.channel.mention}")
@@ -94,7 +94,7 @@ class Player(commands.Cog):
             await ctx.respond(f"Join {ctx.guild.voice_client.channel.mention} and then you can disconnect me")
 
     
-    @slash_command(description="Moves the bot to a voice channel")
+    @slash_command(description=f"moves {FRIENDLY_BOT_NAME} to another voice channel")
     async def move(self, ctx, voice_channel: Option(discord.VoiceChannel, "Select a voice channel")):
         bot_vc_to_join_permissions_obj = voice_channel.permissions_for(ctx.guild.me)
         if not bot_vc_to_join_permissions_obj.connect:
@@ -106,7 +106,7 @@ class Player(commands.Cog):
         await ctx.guild.change_voice_state(channel=ctx.guild.voice_client.channel, self_deaf=True)    
          
 
-    @slash_command(description="Join user voice channel")
+    @slash_command(description=f"make {FRIENDLY_BOT_NAME} to your current voice channel")
     async def join(self, ctx):
         print(ctx.voice_client)
 

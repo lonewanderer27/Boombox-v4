@@ -17,12 +17,13 @@ class Help(commands.Cog):
 `/pause` : pauses the currently playing song
 `/resume` : resumes the paused song
 `/skip` : skips to the next song
+`/loop` : loop the current song
 `playing_now` : shows the currently playing song
 `/lyrics <Optionals: Song Title, Artist>` : shows the lyrics of currently playing song, alternatively you can also search by entering the song title
-`/move <Voice Channel>` : moves the bot to another voice channel
+`/move <Voice Channel>` : moves {FRIENDLY_BOT_NAME} to another voice channel
 `/queue` : displays the songs in queue
 `/shuffle` : shuffles the songs in queue
-`/disconnect` : disconnects the bot from voice channel
+`/disconnect` : disconnects {FRIENDLY_BOT_NAME} from voice channel
 
 **Other Commands:**
 `/simon_says` : make {FRIENDLY_BOT_NAME} say a message on behalf of you
