@@ -7,10 +7,6 @@ class Greeting(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-    
-    @slash_command(description=f"ping {FRIENDLY_BOT_NAME}")
-    async def ping(self,ctx):
-        await ctx.respond("pong!")
 
     @slash_command(description=f"Makes {FRIENDLY_BOT_NAME} say a message for you!")
     async def simon_says(
