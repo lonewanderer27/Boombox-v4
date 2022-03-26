@@ -43,7 +43,7 @@ class Lyrics(commands.Cog):
         return embed_list
 
     # for each slash command inside a cog, it needs to have the self argument! please!
-    @slash_command(description="shows the lyrics of currently playing song, alternatively you can also search by entering the song title")
+    @slash_command(description="shows lyrics of currently playing song, alternatively you can search by entering the song title")
     async def lyrics(
         self, ctx, 
         title: Option(str, "Song's title", default=""),
