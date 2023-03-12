@@ -47,7 +47,8 @@ class Lyrics(commands.Cog):
     # for each slash command inside a cog, it needs to have the self argument! please!
     @commands.slash_command(description="shows lyrics of currently playing song, alternatively you can search by entering the song title")
     async def lyrics(
-            self, ctx,
+            self,
+            ctx: discord.ApplicationContext,
             title: Option(str, "Song's title", default=""),
             artist: Option(str, "Song's artist", default="")):
 

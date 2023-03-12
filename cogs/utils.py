@@ -4,7 +4,7 @@ import aiohttp
 import asyncio
 
 
-def playing_now_embed(ctx):
+def playing_now_embed(ctx: discord.ApplicationContext):
     '''Creates an Discord Embed that shows the currently playing song.'''
     embed = Embed(color=0x44a8de, title="Playing Now")
     embed.set_thumbnail(url=data[ctx.guild.id]['songs'][0]['thumbnail_url'])

@@ -1,7 +1,7 @@
 from pprint import pprint
 import time
 import discord
-from discord.commands import slash_command, Option
+from discord.commands import Option
 from discord.ext import commands
 from app import FRIENDLY_BOT_NAME, DEFAULT_COMMAND_PREFIX, data
 from cogs.utils import playing_now_embed
@@ -12,7 +12,7 @@ class Player(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    def verify_if_boombox_can_join_vc(self, ctx):
+    def verify_if_boombox_can_join_vc(self, ctx: discord.ApplicationContext):
         bot_vc_to_join_permissions_obj = ctx.author.voice.channel.permissions_for(
             ctx.guild.me)
         if not bot_vc_to_join_permissions_obj.connect:
@@ -20,7 +20,7 @@ class Player(commands.Cog):
         return True
 
     @commands.slash_command(description="shows the currently playing song")
-    async def playing_now(self, ctx):
+    async def playing_now(self, ctx: discord.ApplicationContext):
         try:
             if len(data[ctx.guild.id]['songs']) > 0 & ctx.guild.voice_client.is_playing():
                 return await ctx.respond(embed=playing_now_embed(ctx))
@@ -29,7 +29,7 @@ class Player(commands.Cog):
             await ctx.respond("Nothing is playing right now")
 
     @commands.slash_command(description="pauses the currently playing song")
-    async def pause(self, ctx):
+    async def pause(self, ctx: discord.ApplicationContext):
         if ctx.author.voice.channel.id == ctx.guild.voice_client.channel.id:
 
             if ctx.guild.voice_client.is_playing():
@@ -41,7 +41,7 @@ class Player(commands.Cog):
                 await ctx.respond("Nothing is playing right now")
 
     @commands.slash_command(description="resumes the paused song")
-    async def resume(self, ctx):
+    async def resume(self, ctx: discord.ApplicationContext):
         if ctx.author.voice.channel.id == ctx.guild.voice_client.channel.id:
 
             if ctx.guild.voice_client.is_paused():
@@ -53,7 +53,7 @@ class Player(commands.Cog):
                 await ctx.respond("Nothing is playing right now")
 
     @commands.slash_command(description="skips to the next song")
-    async def skip(self, ctx):
+    async def skip(self, ctx: discord.ApplicationContext):
         if ctx.author.voice.channel.id == ctx.guild.voice_client.channel.id:
 
             if ctx.guild.voice_client.is_playing():
@@ -68,7 +68,7 @@ class Player(commands.Cog):
                 await ctx.respond("Nothing is playing right now")
 
     @commands.slash_command(description="loop the current music")
-    async def loop(self, ctx):
+    async def loop(self, ctx: discord.ApplicationContext):
         if ctx.author.voice.channel.id == ctx.guild.voice_client.channel.id:
             pprint(data)
             if ctx.guild.voice_client.is_playing():
@@ -82,7 +82,7 @@ class Player(commands.Cog):
                 await ctx.respond("Nothing is playing right now")
 
     @commands.slash_command(description=f"disconnects {FRIENDLY_BOT_NAME} from voice channel")
-    async def disconnect(self, ctx):
+    async def disconnect(self, ctx: discord.ApplicationContext):
         if ctx.author.voice.channel.id == ctx.guild.voice_client.channel.id:
             await ctx.respond(f"Disconnecting from {ctx.guild.voice_client.channel.mention}")
             await ctx.guild.voice_client.disconnect()
@@ -90,7 +90,7 @@ class Player(commands.Cog):
             await ctx.respond(f"Join {ctx.guild.voice_client.channel.mention} and then you can disconnect me")
 
     @commands.slash_command(description=f"moves {FRIENDLY_BOT_NAME} to another voice channel")
-    async def move(self, ctx, voice_channel: Option(discord.VoiceChannel, "Select a voice channel")):
+    async def move(self, ctx: discord.ApplicationContext, voice_channel: Option(discord.VoiceChannel, "Select a voice channel")):
         bot_vc_to_join_permissions_obj = voice_channel.permissions_for(
             ctx.guild.me)
         if not bot_vc_to_join_permissions_obj.connect:
@@ -103,7 +103,7 @@ class Player(commands.Cog):
         await ctx.guild.change_voice_state(channel=ctx.guild.voice_client.channel, self_deaf=True)
 
     @commands.slash_command(description=f"make {FRIENDLY_BOT_NAME} to your current voice channel")
-    async def join(self, ctx):
+    async def join(self, ctx: discord.ApplicationContext):
         print(ctx.voice_client)
 
         if ctx.author.voice == None:

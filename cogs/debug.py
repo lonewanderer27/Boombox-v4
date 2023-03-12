@@ -13,11 +13,11 @@ class Debug(commands.Cog):
         return f"{round(self.bot.latency * 1000)}ms"
 
     @commands.slash_command(description=f"ping {FRIENDLY_BOT_NAME}")
-    async def ping(self, ctx):
+    async def ping(self, ctx: discord.ApplicationContext):
         await ctx.respond(f"pong! in {self.get_latency()}")
 
     @commands.slash_command(description=f"shows various debug information")
-    async def debug(self, ctx):
+    async def debug(self, ctx: discord.ApplicationContext):
         embed = discord.Embed(title="Debug Info")
         embed.add_field(name="Guild Name", value=ctx.interaction.guild.name)
         embed.add_field(name="Guild ID", value=ctx.interaction.guild.id)

@@ -19,7 +19,7 @@ class Queue(commands.Cog):
         self.FFMPEG_OPTIONS = {
             'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
 
-    def error_playing_song(self, e, ctx):
+    def error_playing_song(self, e, ctx: discord.ApplicationContext):
         if e:
             ctx.guild.voice_client.stop()
             asyncio.run_coroutine_threadsafe(ctx.channel.send(
@@ -54,10 +54,10 @@ class Queue(commands.Cog):
                 unavailable_songs.append(song)
         return available_songs, unavailable_songs
 
-    def add_to_queue(self, ctx, songs):
+    def add_to_queue(self, ctx: discord.ApplicationContext, songs):
         data[ctx.guild.id]['songs'].extend(songs)
 
-    async def shuffle_queue_func(self, ctx):
+    async def shuffle_queue_func(self, ctx: discord.ApplicationContext):
         songs_list = data[ctx.guild.id]['songs']
 
         if len(songs_list) > 2:
@@ -71,7 +71,7 @@ class Queue(commands.Cog):
         else:
             return await ctx.respond(embed=Embed(color=0x44a8de, title="Queue", description="There aren't enough songs to shuffle."))
 
-    async def play_song(self, ctx):
+    async def play_song(self, ctx: discord.ApplicationContext):
         print(f"{len(data[ctx.guild.id]['songs'])} song(s) left")
 
         if len(data[ctx.guild.id]['songs']) > 0:
@@ -105,7 +105,7 @@ class Queue(commands.Cog):
             await ctx.channel.send(embed=Embed(title="Queue", description="There are no more songs in the queue."))
 
     @commands.slash_command(description=f"searches the music and plays it, alternatively single or playlist link also works")
-    async def play(self, ctx, title: Option(str, "Song Title or Youtube Link [Song or Playlist]"), artist: Option(str, "Artist Name", default="")):
+    async def play(self, ctx: discord.ApplicationContext, title: Option(str, "Song Title or Youtube Link [Song or Playlist]"), artist: Option(str, "Artist Name", default="")):
         if artist == "":
             song_display = title
         else:
@@ -158,13 +158,13 @@ class Queue(commands.Cog):
         #     await ctx.channel.send(embed=self.added_to_queue_embed(info['title'], info['webpage_url'], info['thumbnails'][0]['url'], info['uploader']))
 
     @commands.slash_command(description="shuffles the songs in queue")
-    async def shuffle(self, ctx):
+    async def shuffle(self, ctx: discord.ApplicationContext):
         await self.shuffle_queue_func(ctx)
         self.is_shuffled = True
         await self.queue(ctx)
 
     @commands.slash_command(description="displays the songs in queue")
-    async def queue(self, ctx):
+    async def queue(self, ctx: discord.ApplicationContext):
         songs_list = data[ctx.guild.id]['songs']
 
         print(f"{ctx.guild.name} Queued Songs: {len(songs_list[1:])}")
@@ -205,7 +205,7 @@ class Queue(commands.Cog):
             return await ctx.respond(embed=embed)
 
     @play.before_invoke
-    async def ensure_bot_is_connected(self, ctx):
+    async def ensure_bot_is_connected(self, ctx: discord.ApplicationContext):
         if ctx.guild.voice_client == None:
             await ctx.respond(f"{FRIENDLY_BOT_NAME} is not connected to any channel")
             raise discord.ApplicationCommandInvokeError(
