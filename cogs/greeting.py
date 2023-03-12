@@ -16,6 +16,6 @@ class Greeting(commands.Cog):
         await ctx.respond(message)
 
 
-def setup(bot):
+def setup(bot: commands.Bot):
     print(f"Added {__file__} cog!")
     bot.add_cog(Greeting(bot))

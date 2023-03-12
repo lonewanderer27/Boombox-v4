@@ -6,7 +6,7 @@ from app import FRIENDLY_BOT_NAME
 
 class Debug(commands.Cog):
 
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot):
         self.bot = bot
 
     def get_latency(self):
@@ -32,6 +32,6 @@ class Debug(commands.Cog):
         await ctx.respond(embed=embed)
 
 
-def setup(bot):
+def setup(bot: commands.Bot):
     print(f"Added {__file__} cog!")
     bot.add_cog(Debug(bot))

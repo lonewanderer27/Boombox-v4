@@ -85,6 +85,6 @@ class Lyrics(commands.Cog):
         await ctx.interaction.edit_original_response(content=None, embeds=embed_list)
 
 
-def setup(bot):
+def setup(bot: commands.Bot):
     print(f"Added {__file__} cog!")
     bot.add_cog(Lyrics(bot))

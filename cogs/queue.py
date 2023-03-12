@@ -230,6 +230,6 @@ class Queue(commands.Cog):
             pprint(data)
 
 
-def setup(bot):
+def setup(bot: commands.Bot):
     print(f"Added {__file__} cog!")
     bot.add_cog(Queue(bot))
