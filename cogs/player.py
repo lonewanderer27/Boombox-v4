@@ -12,15 +12,14 @@ class Player(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-
     def verify_if_boombox_can_join_vc(self, ctx):
-        bot_vc_to_join_permissions_obj = ctx.author.voice.channel.permissions_for(ctx.guild.me)
+        bot_vc_to_join_permissions_obj = ctx.author.voice.channel.permissions_for(
+            ctx.guild.me)
         if not bot_vc_to_join_permissions_obj.connect:
             return False
         return True
 
-    
-    @slash_command(description="shows the currently playing song")
+    @commands.slash_command(description="shows the currently playing song")
     async def playing_now(self, ctx):
         try:
             if len(data[ctx.guild.id]['songs']) > 0 & ctx.guild.voice_client.is_playing():
@@ -29,8 +28,7 @@ class Player(commands.Cog):
         except KeyError:
             await ctx.respond("Nothing is playing right now")
 
-    
-    @slash_command(description="pauses the currently playing song")
+    @commands.slash_command(description="pauses the currently playing song")
     async def pause(self, ctx):
         if ctx.author.voice.channel.id == ctx.guild.voice_client.channel.id:
 
@@ -42,8 +40,7 @@ class Player(commands.Cog):
             else:
                 await ctx.respond("Nothing is playing right now")
 
-    
-    @slash_command(description="resumes the paused song")
+    @commands.slash_command(description="resumes the paused song")
     async def resume(self, ctx):
         if ctx.author.voice.channel.id == ctx.guild.voice_client.channel.id:
 
@@ -55,8 +52,7 @@ class Player(commands.Cog):
             else:
                 await ctx.respond("Nothing is playing right now")
 
-    
-    @slash_command(description="skips to the next song")
+    @commands.slash_command(description="skips to the next song")
     async def skip(self, ctx):
         if ctx.author.voice.channel.id == ctx.guild.voice_client.channel.id:
 
@@ -69,10 +65,9 @@ class Player(commands.Cog):
                 data[ctx.guild.id]['loop_current_music'] = previous_loop_state
                 # print(f"Loop: {data[ctx.guild.id]['loop_current_music']}")
             else:
-                await ctx.respond("Nothing is playing right now")         
+                await ctx.respond("Nothing is playing right now")
 
-    
-    @slash_command(description="loop the current music")
+    @commands.slash_command(description="loop the current music")
     async def loop(self, ctx):
         if ctx.author.voice.channel.id == ctx.guild.voice_client.channel.id:
             pprint(data)
@@ -86,8 +81,7 @@ class Player(commands.Cog):
             else:
                 await ctx.respond("Nothing is playing right now")
 
-    
-    @slash_command(description=f"disconnects {FRIENDLY_BOT_NAME} from voice channel")
+    @commands.slash_command(description=f"disconnects {FRIENDLY_BOT_NAME} from voice channel")
     async def disconnect(self, ctx):
         if ctx.author.voice.channel.id == ctx.guild.voice_client.channel.id:
             await ctx.respond(f"Disconnecting from {ctx.guild.voice_client.channel.mention}")
@@ -95,36 +89,38 @@ class Player(commands.Cog):
         else:
             await ctx.respond(f"Join {ctx.guild.voice_client.channel.mention} and then you can disconnect me")
 
-    
-    @slash_command(description=f"moves {FRIENDLY_BOT_NAME} to another voice channel")
+    @commands.slash_command(description=f"moves {FRIENDLY_BOT_NAME} to another voice channel")
     async def move(self, ctx, voice_channel: Option(discord.VoiceChannel, "Select a voice channel")):
-        bot_vc_to_join_permissions_obj = voice_channel.permissions_for(ctx.guild.me)
+        bot_vc_to_join_permissions_obj = voice_channel.permissions_for(
+            ctx.guild.me)
         if not bot_vc_to_join_permissions_obj.connect:
             await ctx.respond(f"Oops, please give me permission to join {voice_channel.mention}")
-            raise discord.ApplicationCommandInvokeError(f"{FRIENDLY_BOT_NAME} is not allowed to connect to {voice_channel.mention}")
+            raise discord.ApplicationCommandInvokeError(
+                f"{FRIENDLY_BOT_NAME} is not allowed to connect to {voice_channel.mention}")
 
         await ctx.guild.voice_client.move_to(voice_channel)
         await ctx.respond(f"Moved to {voice_channel.mention}")
-        await ctx.guild.change_voice_state(channel=ctx.guild.voice_client.channel, self_deaf=True)    
-         
+        await ctx.guild.change_voice_state(channel=ctx.guild.voice_client.channel, self_deaf=True)
 
-    @slash_command(description=f"make {FRIENDLY_BOT_NAME} to your current voice channel")
+    @commands.slash_command(description=f"make {FRIENDLY_BOT_NAME} to your current voice channel")
     async def join(self, ctx):
         print(ctx.voice_client)
 
         if ctx.author.voice == None:
             return await ctx.respond("Connect to a voice channel first")
-        
+
         if not self.verify_if_boombox_can_join_vc(ctx):
             await ctx.respond(f"Oops, please give me permission to join {ctx.author.voice.channel.mention}")
-            raise discord.ApplicationCommandError(f"{FRIENDLY_BOT_NAME} is not allowed to connect to {ctx.author.voice.voice_channel.mention}")
+            raise discord.ApplicationCommandError(
+                f"{FRIENDLY_BOT_NAME} is not allowed to connect to {ctx.author.voice.voice_channel.mention}")
 
         if ctx.guild.voice_client == None:
             await ctx.respond(f"Joining {ctx.author.voice.channel.mention}")
             await ctx.author.voice.channel.connect()
-            print(f"ctx.guild.voice_client [{ctx.guild.name}]: {ctx.guild.voice_client}")
-            await ctx.guild.change_voice_state(channel=ctx.guild.voice_client.channel, self_deaf=True)    
-            await ctx.interaction.edit_original_message(content=f"Connected to {ctx.guild.voice_client.channel.mention}")
+            print(
+                f"ctx.guild.voice_client [{ctx.guild.name}]: {ctx.guild.voice_client}")
+            await ctx.guild.change_voice_state(channel=ctx.guild.voice_client.channel, self_deaf=True)
+            await ctx.interaction.edit_original_response(content=f"Connected to {ctx.guild.voice_client.channel.mention}")
             return
 
         if ctx.author.voice.channel.id != ctx.guild.voice_client.channel.id:
@@ -136,20 +132,20 @@ class Player(commands.Cog):
                 print(f"Moving to {ctx.author.voice.channel.name}")
                 await ctx.respond(f"Moving to {ctx.author.voice.channel.mention}")
                 await ctx.guild.voice_client.move_to(ctx.author.voice.channel)
-                await ctx.interaction.edit_original_message(content=f"Connected to {ctx.author.voice.channel.mention}")
+                await ctx.interaction.edit_original_response(content=f"Connected to {ctx.author.voice.channel.mention}")
                 await ctx.guild.change_voice_state(channel=ctx.guild.voice_client.channel, self_deaf=True)
-                print(f"ctx.guild.voice_client [{ctx.guild.name}]: {ctx.guild.voice_client}")
+                print(
+                    f"ctx.guild.voice_client [{ctx.guild.name}]: {ctx.guild.voice_client}")
                 return
         else:
             await ctx.respond(f"I'm already connected in {ctx.guild.voice_client.channel.mention}")
 
-
     @pause.after_invoke
     @resume.after_invoke
     async def set_last_channel_that_triggered_command(self, ctx):
-        print(f"{ctx.author.name} last triggered slash command in {ctx.interaction.channel}")
+        print(
+            f"{ctx.author.name} last triggered slash command in {ctx.interaction.channel}")
         data[ctx.guild.id]['last_channel_that_triggered_command'] = ctx.interaction.channel
-        
 
     @loop.before_invoke
     @pause.before_invoke
@@ -159,7 +155,8 @@ class Player(commands.Cog):
     async def ensure_bot_is_connected(self, ctx):
         if ctx.guild.voice_client == None:
             await ctx.respond(f"{FRIENDLY_BOT_NAME} is not connected to any channel")
-            raise discord.ApplicationCommandInvokeError(f"{FRIENDLY_BOT_NAME} is not connected to any channel")
+            raise discord.ApplicationCommandInvokeError(
+                f"{FRIENDLY_BOT_NAME} is not connected to any channel")
 
         try:
             print("data:")

@@ -1,7 +1,9 @@
 env
+.env
 .vscode
 __pycache__
 env
 test
 boombox_v4.log
 Flowcharts & Schematics
+poetry.lock

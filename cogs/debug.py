@@ -1,7 +1,8 @@
-from discord.commands import slash_command
+# from discord.commands import slash_command
 from discord.ext import commands
 import discord
 from app import FRIENDLY_BOT_NAME
+
 
 class Debug(commands.Cog):
 
@@ -11,20 +12,23 @@ class Debug(commands.Cog):
     def get_latency(self):
         return f"{round(self.bot.latency * 1000)}ms"
 
-    @slash_command(description=f"ping {FRIENDLY_BOT_NAME}")
-    async def ping(self,ctx):
+    @commands.slash_command(description=f"ping {FRIENDLY_BOT_NAME}")
+    async def ping(self, ctx):
         await ctx.respond(f"pong! in {self.get_latency()}")
 
-    @slash_command(description=f"shows various debug information")
+    @commands.slash_command(description=f"shows various debug information")
     async def debug(self, ctx):
         embed = discord.Embed(title="Debug Info")
         embed.add_field(name="Guild Name", value=ctx.interaction.guild.name)
         embed.add_field(name="Guild ID", value=ctx.interaction.guild.id)
-        embed.add_field(name="Text Channel", value=ctx.interaction.channel.mention, inline=True)
+        embed.add_field(name="Text Channel",
+                        value=ctx.interaction.channel.mention, inline=True)
         if ctx.guild.voice_client != None:
-            embed.add_field(name="Voice Channel", value=ctx.guild.voice_client.channel.mention)
+            embed.add_field(name="Voice Channel",
+                            value=ctx.guild.voice_client.channel.mention)
         embed.add_field(name="Latency", value=self.get_latency())
-        embed.set_footer(text="Note: Guild is the internal name of Server. They're the same.", icon_url=discord.Embed.Empty)
+        embed.set_footer(
+            text="Note: Guild is the internal name of Server. They're the same.", icon_url=discord.Embed.Empty)
         await ctx.respond(embed=embed)
 
 

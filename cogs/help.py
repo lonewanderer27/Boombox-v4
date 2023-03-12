@@ -1,7 +1,7 @@
 import discord
-from discord.commands import slash_command
 from discord.ext import commands
 from app import TESTING_SERVERS, FRIENDLY_BOT_NAME, DEFAULT_COMMAND_PREFIX
+
 
 class Help(commands.Cog):
 
@@ -58,9 +58,10 @@ class Help(commands.Cog):
 **Debug Commands:**
 `{command_prefix}guild-info` : returns the server id & name'''
 
-    @slash_command(description=f"Show {FRIENDLY_BOT_NAME} help message", name="help")
+    @commands.slash_command(description=f"Show {FRIENDLY_BOT_NAME} help message", name="help")
     async def help(self, ctx: discord.ApplicationContext):
         await ctx.respond(self.slash_help, ephemeral=True)
+
 
 def setup(bot):
     print(f"Added {__file__} cog!")
